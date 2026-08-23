@@ -1,6 +1,6 @@
 # Refactor-CSS — Architecture Review
 
-Status: pre-implementation review
+Status: pre-implementation review — **background/rationale only.** `docs/adr-001-v0.1-architecture.md` is the binding contract and supersedes this document wherever they conflict. Notably: §5, §12, and the M0 plan below still describe a `packages/refactor-css` + `pnpm-workspace.yaml` layout — **that recommendation is superseded by ADR-001 B1**, which makes the repository root itself the single package (no workspace, no `packages/` dir) for v0.1.
 Date: 2026-08-24
 Reviewer role: skeptical staff/principal engineer
 
