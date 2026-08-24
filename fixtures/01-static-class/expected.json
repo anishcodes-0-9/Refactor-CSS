@@ -1,6 +1,6 @@
 {
-  "status": "reserved-for-m1",
-  "description": "RESERVED M1 CONTRACT — not produced or validated by any M0 code. M0 implements no analyzer, no fixture-driven test, and no findings logic; nothing in this repository reads this file yet. It exists only to fix, in advance, the expected-output convention (a minimal subset of the domain model in src/domain/index.ts) that M1's fixtures.test.ts will assert against once the analyzer exists — see docs/adr-001-v0.1-architecture.md §6. Kept as `expected.json` (not `expected.m1.json`) because §6 already names this exact filename as what fixtures.test.ts will consume.",
+  "status": "active-m1-contract",
+  "description": "ACTIVE M1 CONTRACT — asserted against by test/fixtures.test.ts, which runs analyze() on this fixture directory and compares a projected subset of the result (selectors: key + referenceStatus; findings: rule + key + operation + risk) against the values below. This is a minimal subset of the full Report envelope (schemaVersion/tool/root/coverage/diagnostics) defined in docs/adr-001-v0.1-architecture.md §3 — those fields are populated by analyze() but intentionally not pinned by this fixture file.",
   "selectors": [
     { "key": "hero", "referenceStatus": "REFERENCED" },
     { "key": "unused", "referenceStatus": "UNREFERENCED" }

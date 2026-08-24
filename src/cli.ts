@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 
-// M0 scaffold only — no analysis logic. See docs/adr-001-v0.1-architecture.md §7.
-// The version string is a literal, not read from package.json, to avoid an
-// import that reaches outside `rootDir` (src/); keep it in sync with the
-// "version" field in package.json until a real build-time injection exists.
-const VERSION = '0.0.0';
+// cli.ts: argv only, no analysis logic (ADR-001 §2). All real work happens
+// in run.ts / report/.
+import { analyze } from './run.js';
+import { renderTerminal } from './report/index.js';
+import { VERSION } from './version.js';
 
-const HELP = `Usage: refactor-css [options]
+const HELP = `Usage: refactor-css <command> [options]
 
-Refactor-CSS is a conservative, evidence-based CSS usage analyzer.
-This is a pre-release scaffold — no commands are implemented yet.
+Refactor-css is a conservative, evidence-based CSS usage analyzer.
+
+Commands:
+  analyze <path>  Analyze a repository/fixture root and print findings
 
 Options:
   -v, --version   Print the version number
@@ -19,6 +21,20 @@ Options:
 function main(argv: string[]): void {
   if (argv.includes('--version') || argv.includes('-v')) {
     process.stdout.write(`${VERSION}\n`);
+    return;
+  }
+
+  if (argv[0] === 'analyze') {
+    const root = argv[1];
+    if (!root) {
+      process.stderr.write('refactor-css analyze: missing <path>\n');
+      process.exitCode = 1;
+      return;
+    }
+    const start = performance.now();
+    const report = analyze(root);
+    const durationMs = Math.round(performance.now() - start);
+    process.stdout.write(renderTerminal(report, { durationMs }));
     return;
   }
 
