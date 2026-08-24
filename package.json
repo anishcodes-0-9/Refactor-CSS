@@ -1,13 +1,37 @@
 {
-  "name": "Refactor-CSS",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "refactor-css",
+  "version": "0.0.0",
+  "description": "A conservative, evidence-based CSS usage analyzer for React/Next.js repositories.",
+  "type": "module",
+  "license": "MIT",
+  "private": false,
+  "engines": {
+    "node": ">=20.19"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.29.2"
+  "bin": {
+    "refactor-css": "./dist/cli.js"
+  },
+  "exports": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anishcodes-0-9/Refactor-CSS.git"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "pretest": "pnpm run build",
+    "test": "vitest run"
+  },
+  "packageManager": "pnpm@10.29.2",
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "eslint": "^10.9.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.11"
+  }
 }

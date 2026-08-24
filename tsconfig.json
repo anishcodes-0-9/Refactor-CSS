@@ -1,0 +1,29 @@
+// M0 typecheck boundary (deliberate, not a gap to close before M1):
+// `include` is "src" only, and `rootDir` must stay "src" so `dist/cli.js` /
+// `dist/index.js` land at the exact paths package.json's `bin`/`exports`
+// require (see docs/adr-001-v0.1-architecture.md §7). Adding `test/**` to
+// this same program throws TS6059 ("File is not under 'rootDir'") even
+// under `--noEmit` — verified empirically, not assumed. So: `pnpm typecheck`
+// intentionally checks the publishable `src/` surface only. Vitest still
+// executes and runs the tests under `test/` (via its own esbuild
+// transpilation), but their types are not independently checked by this tsc
+// program. Do not "fix" this with a second tsconfig or extra typecheck
+// tooling in M0 — see the ADR's explicit "no rename — this is now the only
+// tsconfig" constraint.
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "declaration": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "isolatedModules": true
+  },
+  "include": ["src"]
+}
