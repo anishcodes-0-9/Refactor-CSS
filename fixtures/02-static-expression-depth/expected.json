@@ -1,0 +1,16 @@
+{
+  "status": "active-m2a-contract",
+  "description": "ACTIVE M2A CONTRACT — asserted against by test/fixtures.test.ts, which runs analyze() on this fixture directory and compares a projected subset of the result (selectors: key + referenceStatus; findings: rule + key + operation + risk) against the values below. Exercises M2A's static-expression-depth extraction only: className={\"badge-wrap\"} (wrapped string literal), className={`nav`} (no-substitution template literal), a ternary with both branches static string literals, className={condition && \"flag\"} (right operand only), and a mixed ternary (className={open ? \"modal\" : getModalClass(open)}) whose static branch must still be counted as usage even though its sibling branch is unresolved. Does not exercise M2B (pattern sinks, REFERENCED_DYNAMICALLY, dynamicMatches, sink-count caveats, risk logic) — none of that machinery exists yet; the opaque evidence produced for the getModalClass(open) branch has key: null and therefore cannot join to any selector, so it has no effect on this fixture's projected selectors/findings.",
+  "selectors": [
+    { "key": "active", "referenceStatus": "REFERENCED" },
+    { "key": "badge-wrap", "referenceStatus": "REFERENCED" },
+    { "key": "flag", "referenceStatus": "REFERENCED" },
+    { "key": "hero", "referenceStatus": "REFERENCED" },
+    { "key": "modal", "referenceStatus": "REFERENCED" },
+    { "key": "nav", "referenceStatus": "REFERENCED" },
+    { "key": "orphan", "referenceStatus": "UNREFERENCED" }
+  ],
+  "findings": [
+    { "rule": "unreferenced-selector", "key": "orphan", "operation": "DELETE", "risk": "REVIEW" }
+  ]
+}

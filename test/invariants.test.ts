@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { analyze } from '../src/index.js';
 import { buildIndex } from '../src/index/index.js';
+import { extractSource } from '../src/source/index.js';
 import type { SelectorDefinition } from '../src/domain/index.js';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -11,9 +12,13 @@ const fixtureRoot = path.join(repoRoot, 'fixtures/01-static-class');
 
 /**
  * ADR-001 §5's executable safety contract, run across every fixture.
- * M1's Definition of done (§6) activates only I6, I8, I11 — the rest
- * (I1-I5, I7, I9, I10) activate as their machinery (sinks, BLOCKED,
- * pattern/opaque resolution) lands in M2-M4.
+ * M1's Definition of done (§6) activated only I6, I8, I11. M2A adds the
+ * first truthfully-enforceable slice of I10 (the opaque half only —
+ * source/index.ts now produces real opaque Evidence for an unresolved
+ * ternary/`&&` branch, so `key === null` is a real, checkable claim for
+ * the first time). I10's pattern half, I1-I5, I7, and I9 remain deferred:
+ * no pattern Evidence exists yet (M2B), and no rule/risk/BLOCKED logic
+ * changed in M2A.
  */
 describe('invariants', () => {
   it('I6: every finding has non-empty evidence, and every SourceLocation resolves to a real file in the fixture', () => {
@@ -69,5 +74,14 @@ describe('invariants', () => {
     expect(records).toHaveLength(1);
     expect(records[0]?.definitions).toHaveLength(2);
     expect(records[0]?.definitions.map((d) => d.stylesheet)).toEqual(['a.css', 'b.css']);
+  });
+
+  it('I10 (opaque half): every Evidence with resolution "opaque" has key === null', () => {
+    const content = 'const x = <div className={active ? "hero" : getClassName()} />;';
+    const evidence = extractSource('x.tsx', content);
+    const opaque = evidence.filter((e) => e.resolution === 'opaque');
+
+    expect(opaque.length).toBeGreaterThan(0);
+    for (const item of opaque) expect(item.key).toBeNull();
   });
 });

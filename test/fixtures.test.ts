@@ -44,3 +44,28 @@ describe('fixture: 01-static-class', () => {
     expect(['REFERENCED', 'REFERENCED_DYNAMICALLY', 'UNREFERENCED']).toContain(unused?.referenceStatus);
   });
 });
+
+/**
+ * M2A vertical slice: static-expression-depth extraction end to end
+ * (ADR-001 §4.2 rows this milestone adds — see the fixture's own
+ * "description" field for exactly what is, and is not, exercised).
+ */
+describe('fixture: 02-static-expression-depth', () => {
+  const fixtureRoot = path.join(repoRoot, 'fixtures/02-static-expression-depth');
+  const expected = JSON.parse(readFileSync(path.join(fixtureRoot, 'expected.json'), 'utf8')) as ExpectedFixture;
+
+  it('matches the expected selectors and findings', () => {
+    const report = analyze(fixtureRoot);
+
+    const actualSelectors = report.selectors.map((s) => ({ key: s.key, referenceStatus: s.referenceStatus }));
+    expect(actualSelectors).toEqual(expected.selectors);
+
+    const actualFindings = report.findings.map((f) => ({
+      rule: f.rule,
+      key: f.key,
+      operation: f.operation,
+      risk: f.risk,
+    }));
+    expect(actualFindings).toEqual(expected.findings);
+  });
+});
